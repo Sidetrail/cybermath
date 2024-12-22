@@ -41,7 +41,8 @@ const skillData = {
 const attackData = [
     { name: "Assault Rifle Single Shot", rangeType: "Assault Rifle", skill: "shoulderArms", damage: "5d6", bonus: 2 },
     { name: "Assault Rifle Autofire", rangeType: "Assault Rifle Autofire", skill: "autofire", damage: "2d6", bonus: 2, autofiremax: 4 },
-    { name: "Assault Rifle Targeted Shot", rangeType: "Assault Rifle", skill: "shoulderArms", damage: "5d6", bonus: -4, multiplier: 2 }
+    { name: "Assault Rifle Targeted Head Shot", rangeType: "Assault Rifle", skill: "shoulderArms", damage: "5d6", bonus: -4, multiplier: 2 },
+    { name: "Assault Rifle Targeted Leg Shot", rangeType: "Assault Rifle", skill: "shoulderArms", damage: "5d6", bonus: -4, damageBonus: 5 }
 ]
 
 const ranges = {
@@ -85,8 +86,15 @@ const runAttack = (weaponAttack, enemy) => {
     const result = {}
     Object.keys(ranges).map(range => {
         const dv = ranges[range][weaponAttack.rangeType];
-        const damageBeforeReductions = attackRoll.total > dv ? diceRoll(weaponAttack.damage + (getAutofireMultiplier(attackRoll.total - dv, weaponAttack) || 0)).total : 0;
-        const damageAfterReductions = weaponAttack.multiplier ? (damageBeforeReductions - enemy.headSp) * weaponAttack.multiplier : damageBeforeReductions - enemy.bodySp;
+        const damageRoll = diceRoll(weaponAttack.damage + (getAutofireMultiplier(attackRoll.total - dv, weaponAttack) || 0));
+        const damageBeforeReductions = attackRoll.total > dv ? damageRoll.total : 0;
+        let damageAfterReductions = weaponAttack.multiplier ? (damageBeforeReductions - enemy.headSp) * weaponAttack.multiplier : damageBeforeReductions - enemy.bodySp;
+        if(damageRoll.rolls.filter(i=>i==6).length > 2){
+            damageAfterReductions += 5;
+        }
+        if(damageAfterReductions > 0){
+            damageAfterReductions += weaponAttack.damageBonus || 0;
+        }
         // console.log(`${weaponAttack.name}: ${range}: roll:${attackRoll.total} damage: ${damageAfterReductions}`)
         return result[range] = damageAfterReductions > 0 ? damageAfterReductions : 0;
     })
