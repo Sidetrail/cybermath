@@ -1,0 +1,1 @@
+In order to change the parameters of the program, change the data within the attackData and skillData arrays, and place the output of the program into the top of the script.js file and then open index.html with a browser.
