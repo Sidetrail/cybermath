@@ -1,0 +1,14 @@
+.inputArea{
+    display: flex;
+    flex-direction: row;
+}
+
+.weaponEntry{
+    display: flex;
+    flex-direction: row;
+}
+
+.weaponEntryPair{
+    display: flex;
+    flex-direction: column;
+}
