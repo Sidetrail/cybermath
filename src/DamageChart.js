@@ -167,12 +167,12 @@ const DamageChart = ({ skills, attacks }) => {
 
     const getColorForValue = (value) => {
         const min = 0;
-        const max = 180;
+        const max = 50;
         const clampedValue = Math.min(Math.max(value, min), max);
         const normalizedValue = (clampedValue - min) / (max - min);
-        const hue = 341;
+        const hue = 0;
         const saturation = 100;
-        const lightness = Math.round((1 - normalizedValue) * 70 + 30);
+        const lightness = Math.round((1 - normalizedValue) * 70 + 10);
         return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
     }
 
