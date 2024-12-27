@@ -1,14 +1,48 @@
-.inputArea{
+.inputArea {
     display: flex;
     flex-direction: row;
+    justify-content: space-around;
+    margin: auto;
 }
 
-.weaponEntry{
+.userInput{
+    text-align: center;
+}
+
+.weaponEntry {
     display: flex;
     flex-direction: row;
+    margin: 10px;
 }
 
-.weaponEntryPair{
+.weaponEntryPair {
     display: flex;
     flex-direction: column;
+    width: auto;
+    margin: 5px;
+}
+
+.regenButton {
+    background-color: var(--primary-color);
+}
+
+.singleNumber {
+    width: 30px;
+}
+
+.skill {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.skillArea{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.skillLabel{
+    font-size: 18pt;
+    margin: 6px;
 }

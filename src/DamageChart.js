@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import './DamageChart.css'; 
-import {enemyData, ranges, permutations} from './DataTypes.js'
+import React from 'react';
+import './DamageChart.css';
+import { enemyData, ranges, permutations } from './DataTypes.js'
 
-const DamageChart = ({skills, attacks}) => {
+const DamageChart = ({ skills, attacks }) => {
 
     // Dice roll function
     const diceRoll = (diceString) => {
@@ -39,31 +39,36 @@ const DamageChart = ({skills, attacks}) => {
         return weapon?.autofiremax < diff + 1 ? "x" + weapon.autofiremax : "x" + (+diff + 1);
     }
 
-    // Function to run a single attack simulation
-    const runAttack = (weaponAttack, enemy) => {
-        let attackRoll = diceRoll("1d10+" + (+weaponAttack.bonus + +skills[weaponAttack.skill]));
-        if(attackRoll.rolls[0] == 10){ // Dice crit handling
+    const getAttackRoll = (weapon) => {
+        let attackRoll = diceRoll("1d10+" + (+weapon.bonus + +skills[weapon.skill]));
+        if (attackRoll.rolls[0] === 10) { // Dice crit handling
             attackRoll = diceRoll("1d10+" + attackRoll.total);
-        } else if(attackRoll.rolls[0] == 1){
+        } else if (attackRoll.rolls[0] === 1) {
             attackRoll.total -= diceRoll("1d10").total;
         }
+        return attackRoll
+    }
+
+    // Function to run a single attack simulation
+    const runAttack = (weaponAttack, enemy) => {
+        const attackRoll = getAttackRoll(weaponAttack);
         const result = {}
         Object.keys(ranges).map(range => {
             const dv = ranges[range][weaponAttack.rangeType];
             const damageRoll = diceRoll(weaponAttack.damage + (getAutofireMultiplier(attackRoll.total - dv, weaponAttack) || 0));
             const damageBeforeReductions = attackRoll.total > dv ? damageRoll.total : 0;
             let damageAfterReductions = weaponAttack.multiplier ? (damageBeforeReductions - enemy.headSp) * weaponAttack.multiplier : damageBeforeReductions - enemy.bodySp;
-            if (damageRoll.rolls.filter(i => i == 6).length > 2 && !weaponAttack.damageBonus) { // Critical damage, ignoring attacks that guarentee crits
+            if (damageRoll.rolls.filter(i => i === 6).length > 2 && !weaponAttack.damageBonus) { // Critical damage, ignoring attacks that guarentee crits
                 damageAfterReductions += 5;
             }
             if (damageAfterReductions > 0) { // Guarenteed crits like leg shots
                 damageAfterReductions += weaponAttack.damageBonus || 0;
             }
-            
+
             return result[range] = damageAfterReductions > 0 ? damageAfterReductions : 0;
         })
         return result;
-    };    
+    };
 
 
 
@@ -71,14 +76,14 @@ const DamageChart = ({skills, attacks}) => {
     const averageResults = (results, runAmount) => {
         const reducedResults = results.reduce((accumulator, current) => {
             const newAccumulator = {}
-            Object.keys(current).map(a => newAccumulator[a] = current[a] + (accumulator[a] || 0))
+            Object.keys(current).forEach(a => newAccumulator[a] = current[a] + (accumulator[a] || 0))
             return newAccumulator
         }, {});
         Object.keys(reducedResults).map(key => reducedResults[key] = reducedResults[key] / runAmount)
         return reducedResults;
     }
 
-    const generateHeatMapTable = (tableId, chartTitle, chartData) => {
+    const generateHeatMapTable = (chartTitle, chartData) => {
         const armorLevels = Object.keys(chartData[chartTitle]);
         const rangeLabels = Object.keys(chartData[chartTitle]["Armor 0"]);
 
@@ -97,7 +102,7 @@ const DamageChart = ({skills, attacks}) => {
                     <tbody>
                         {rangeLabels.map((rangeLabel) => (
                             <tr key={rangeLabel}>
-                                <td>{rangeLabel.replace(/\d+:\s/, "")}</td>
+                                <td className="rowTitle">{rangeLabel.replace(/\d+:\s/, "")}</td>
                                 {armorLevels.map((armorLevel) => {
                                     const damage = chartData[chartTitle][armorLevel][rangeLabel];
                                     const color = getColorForValue(damage);
@@ -118,7 +123,7 @@ const DamageChart = ({skills, attacks}) => {
         );
     }
 
-    const generateBestTypeTable = (tableId, chartData) => {
+    const generateBestTypeTable = (chartData) => {
         const attackTypes = Object.keys(chartData);
         const armorLevels = Object.keys(chartData[attackTypes[0]]);
         const rangeLabels = Object.keys(chartData[attackTypes[0]]["Armor 0"]);
@@ -165,7 +170,7 @@ const DamageChart = ({skills, attacks}) => {
         const max = 180;
         const clampedValue = Math.min(Math.max(value, min), max);
         const normalizedValue = (clampedValue - min) / (max - min);
-        const hue = 240;
+        const hue = 341;
         const saturation = 100;
         const lightness = Math.round((1 - normalizedValue) * 70 + 30);
         return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
@@ -174,7 +179,7 @@ const DamageChart = ({skills, attacks}) => {
     const calculateResults = () => {
         const results = {}
 
-        attacks.map((attack) => {
+        attacks.forEach((attack) => {
             const testresults = enemyData.reduce(
                 (acc, data) => {
                     const attackResults = [];
@@ -192,25 +197,16 @@ const DamageChart = ({skills, attacks}) => {
 
     const results = calculateResults();
 
-    console.log('RENDER',skills, attacks)
-
     return (
         <div>
             <div className="chart-container">
-                {generateHeatMapTable('table1', "Assault Rifle Single Shot", results)}
+                {generateBestTypeTable(results)}
             </div>
-            <div className="chart-container">
-                {generateHeatMapTable('table2', "Assault Rifle Autofire", results)}
-            </div>
-            <div className="chart-container">
-                {generateHeatMapTable('table3', "Assault Rifle Targeted Head Shot", results)}
-            </div>
-            <div className="chart-container">
-                {generateHeatMapTable('table4', "Assault Rifle Targeted Leg Shot", results)}
-            </div>
-            <div className="chart-container">
-                {generateBestTypeTable('table5', results)}
-            </div>
+            {attacks.map(attack => (
+                <div className="chart-container">
+                    {generateHeatMapTable(attack.name, results)}
+                </div>
+            ))}
         </div>
     );
 };

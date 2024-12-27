@@ -1,13 +1,22 @@
+/* Color Theming */
+:root {
+  --primary-color: #FF004F;
+  --secondary-color: #00FFB3;
+  --background-color: #101010;
+  --text-primary-color: #E0E0E0;
+  --text-secondary-color: #9E9E9E;
+}
+
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--background-color);
+  color: var(--text-primary-color);
+  font-family: "Roboto Mono", monospace;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+
