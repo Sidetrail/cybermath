@@ -5,6 +5,16 @@
   --background-color: #101010;
   --text-primary-color: #E0E0E0;
   --text-secondary-color: #9E9E9E;
+  --link-color: #4AF626;
+  --used-link-color: #BD00FF;
+}
+
+a:link {
+  color: var(--link-color);
+}
+
+a:visited {
+  color: var(--used-link-color);
 }
 
 body {
@@ -18,5 +28,3 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
-
-

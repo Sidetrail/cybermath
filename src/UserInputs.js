@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { skills, defaultAttackData, ranges } from './DataTypes';
+import { skills, defaultAttackData, ranges, entryExplination } from './DataTypes';
 import "./UserInput.css";
 
 const UserInputs = ({ updateAttacks, updateSkills }) => {
@@ -21,44 +21,52 @@ const UserInputs = ({ updateAttacks, updateSkills }) => {
         return capitalizedString;
     }
 
-    const getAttackInput = (attack) => {
+
+    const getAttackInput = (attack, index) => {
         return (
-            <div className="weaponEntry" key={attack.name}>
+            <div className="weaponEntry" key={attack.name+"weaponEntry"+index}>
                 <div className="weaponEntryPair">
-                    <label>Attack Name</label>
-                    <input type="text" value={attack.name} onChange={(e) => setUserAttacks([...userAttacks.filter(i => i.name !== attack.name), { ...attack, name: e.target.value }])} />
+                    <label  data-tooltip={entryExplination.name}>Attack Name</label>
+                    <input key={attack.name + "+name"} type="text" defaultValue={attack.name} onChange={(e) => setUserAttacks([...userAttacks.filter(i => i.name !== attack.name), { ...attack, name: e.target.value }])} />
                 </div>
                 <div className="weaponEntryPair">
-                    <label>Range Table</label>
-                    <select value={attack.rangeType} onChange={(e) => setUserAttacks([...userAttacks.filter(i => i.name !== attack.name), { ...attack, rangeType: e.target.value }])}>
-                        {Object.keys(ranges["1: cqc 0-6m"]).map(rangeTable => (<option value={rangeTable}>{rangeTable}</option>))}
+                    <label data-tooltip={entryExplination.rangeType}>Range Table</label>
+                    <select key={attack.name + "+rangetype"+index} defaultValue={attack.rangeType} onChange={(e) => setUserAttacks([...userAttacks.filter(i => i.name !== attack.name), { ...attack, rangeType: e.target.value }])}>
+                        {Object.keys(ranges["1: cqc 0-6m"]).map(rangeTable => (<option defaultValue={rangeTable}>{rangeTable}</option>))}
                     </select>
                 </div>
                 <div className="weaponEntryPair">
-                    <label>Weapon Skill</label>
-                    <select value={attack.skill} onChange={(e) => setUserAttacks([...userAttacks.filter(i => i.name !== attack.name), { ...attack, skill: e.target.value }])}>
-                        {Object.keys(skills).map(skill => (<option value={skill}>{camelCaseConversion(skill)}</option>))}
+                    <label data-tooltip={entryExplination.skill}>Weapon Skill</label>
+                    <select key={attack.name + "+skill"+index}  defaultValue={attack.skill} onChange={(e) => setUserAttacks([...userAttacks.filter(i => i.name !== attack.name), { ...attack, skill: e.target.value }])}>
+                        {Object.keys(skills).map(skill => (<option defaultValue={skill}>{camelCaseConversion(skill)}</option>))}
                     </select>
                 </div>
                 <div className="weaponEntryPair">
-                    <label>Damage</label>
-                    <input type="text" value={attack.damage || '0d6'} onChange={(e) => setUserAttacks([...userAttacks.filter(i => i.name !== attack.name), { ...attack, damage: e.target.value }])} />
+                    <label data-tooltip={entryExplination.damage}>Damage</label>
+                    <input key={attack.name + "+damage"+index}  type="text" defaultValue={attack.damage || '0d6'} className="damageInput" onChange={(e) => setUserAttacks([...userAttacks.filter(i => i.name !== attack.name), { ...attack, damage: e.target.value }])} />
                 </div>
                 <div className="weaponEntryPair">
-                    <label>Rate of Fire</label>
-                    <input type="number" className="singleNumber" value={attack.rof || 1} onChange={(e) => setUserAttacks([...userAttacks.filter(i => i.name !== attack.name), { ...attack, rof: e.target.value }])} />
+                    <label data-tooltip={entryExplination.rof}>Rate of Fire</label>
+                    <input key={attack.name + "+rof"+index}  type="number" className="singleNumber" defaultValue={attack.rof || 1} onChange={(e) => setUserAttacks([...userAttacks.filter(i => i.name !== attack.name), { ...attack, rof: e.target.value }])} />
                 </div>
                 <div className="weaponEntryPair">
-                    <label>Bonus</label>
-                    <input type="number" className="singleNumber" value={attack.bonus || 0} onChange={(e) => setUserAttacks([...userAttacks.filter(i => i.name !== attack.name), { ...attack, bonus: e.target.value }])} />
+                    <label data-tooltip={entryExplination.bonus}>To Hit Bonus</label>
+                    <input key={attack.name + "+bonus"+index} type="number" className="singleNumber" defaultValue={attack.bonus || 0} onChange={(e) => setUserAttacks([...userAttacks.filter(i => i.name !== attack.name), { ...attack, bonus: e.target.value }])} />
                 </div>
                 <div className="weaponEntryPair">
-                    <label>Auto Fire Multiplier</label>
-                    <input type="number" className="singleNumber" value={attack.autofiremax || 0} onChange={(e) => setUserAttacks([...userAttacks.filter(i => i.name !== attack.name), { ...attack, autofiremax: e.target.value }])} />
+                    <label data-tooltip={entryExplination.autofiremax}>Autofire Multiplier</label>
+                    <input key={attack.name + "+autoFireMax"+index} type="number" className="singleNumber" defaultValue={attack.autofiremax || 0} onChange={(e) => setUserAttacks([...userAttacks.filter(i => i.name !== attack.name), { ...attack, autofiremax: e.target.value }])} />
                 </div>
                 <div className="weaponEntryPair">
-                    <label>Bonus Damage</label>
-                    <input type="number" className="singleNumber" value={attack.damageBonus || 0} onChange={(e) => setUserAttacks([...userAttacks.filter(i => i.name !== attack.name), { ...attack, damageBonus: e.target.value }])} />
+                    <label data-tooltip={entryExplination.damageBonus}>Bonus Damage</label>
+                    <input key={attack.name + "+bonusDamage"+index} type="number" className="singleNumber" defaultValue={attack.damageBonus || 0} onChange={(e) => setUserAttacks([...userAttacks.filter(i => i.name !== attack.name), { ...attack, damageBonus: e.target.value }])} />
+                </div>
+                <div className="weaponEntryPair">
+                    <label data-tooltip={entryExplination.multiplier}>Damage Multiplier</label>
+                    <input key={attack.name + "+multi"+index} type="number" className="singleNumber" defaultValue={attack.multiplier || 1} onChange={(e) => setUserAttacks([...userAttacks.filter(i => i.name !== attack.name), { ...attack, multiplier: e.target.value }])} />
+                </div>
+                <div className="weaponEntryPair">
+                    <button className="removeAttack" onClick={() => setUserAttacks([...userAttacks.filter(i => i.name !== attack.name)])}>Remove</button>
                 </div>
             </div>)
     }
@@ -72,13 +80,15 @@ const UserInputs = ({ updateAttacks, updateSkills }) => {
         <div className="userInput">
             <div className="inputArea">
                 <div className="skillArea">
-                    {Object.keys(skills).map(skill => getSkillInput(skill))}
+                    Weapon Skills
+                    {Object.keys(skills).map((skill, index )=> getSkillInput(skill, index))}
                 </div>
                 <div className="weaponArea">
+                    Attack Types
                     {userAttacks.map(attack => getAttackInput(attack))}
                     <div>
-                        Add Additional Attack?
-                        <button onClick={() => setUserAttacks([...userAttacks, { name: "new" }])}>+</button>
+                        Add Additional Attack
+                        <button className="addAttack" onClick={() => setUserAttacks([...userAttacks, { name: "new" }])}>+</button>
                     </div>
                 </div>
             </div>

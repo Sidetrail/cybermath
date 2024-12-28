@@ -5,7 +5,7 @@
     margin: auto;
 }
 
-.userInput{
+.userInput {
     text-align: center;
 }
 
@@ -13,36 +13,103 @@
     display: flex;
     flex-direction: row;
     margin: 10px;
+    font-size: 12pt;
 }
 
 .weaponEntryPair {
     display: flex;
     flex-direction: column;
     width: auto;
-    margin: 5px;
+    margin: 10px;
+    align-items: center;
+    justify-content: center;
+}
+
+.damageInput {
+    max-width: 40px;
+    border-radius: 14px;
+    padding: 5px;
+}
+
+.addAttack {
+    display: table-cell;
+    vertical-align: middle;
+    background-color: var(--primary-color);
+    font-size: 20pt;
+    border-radius: 10px;
+    margin: 2px;
+    font-family: "Roboto Mono", monospace;
+    justify-content: center;
+    border: none;
+    margin-left: 10px;
 }
 
 .regenButton {
     background-color: var(--primary-color);
+    font-size: 20pt;
+    border-radius: 14px;
+    margin: 4px;
+    font-family: "Roboto Mono", monospace;
+    margin-top: 50px;
+}
+
+.regenButton:hover {
+    filter: brightness(80%);
+}
+
+.removeAttack {
+    background-color: var(--text-secondary-color);
+    border-radius: 10px;
+    vertical-align: middle;
 }
 
 .singleNumber {
     width: 30px;
+    border-radius: 10px;
+    padding: 5px;
 }
 
 .skill {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    font-size: 14pt;
 }
 
-.skillArea{
+.skillArea {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    font-size: 24pt;
 }
 
-.skillLabel{
+.weaponArea {
+    font-size: 24pt;
+}
+
+.skillLabel {
     font-size: 18pt;
     margin: 6px;
+}
+
+[data-tooltip]::before {
+    position : absolute;
+    content : attr(data-tooltip);
+    opacity : 0;
+
+    transition: all 0.15s ease;
+    box-shadow: 2px 2px 1px silver;
+    padding: 10px;
+    color:black;
+    background-color: grey;
+    border-radius: 8px;
+}
+
+[data-tooltip]:hover::before {
+    opacity : 1;
+    margin-top:-50px;
+}
+
+[data-tooltip]:not([data-tooltip-persistent])::before {
+    pointer-events: none;
 }

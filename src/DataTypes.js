@@ -119,3 +119,15 @@ export const defaultAttackData = [
     { name: "Assault Rifle Targeted Leg Shot", rangeType: "Assault Rifle", skill: "shoulderArms", damage: "5d6", bonus: -4, damageBonus: 5, rof: 1 }
 ];
 
+export const entryExplination = {
+    name: "The name of the attack used, to be displayed on the chart title ",
+    bonus: "The additive negative or positive modifiers to the weapon, things like weapon quality, role skills, cyberware, or aim penalties",
+    rof: "How many attacks per turn this weapon can do",
+    rangeType: "Which range DV table the weapon uses",
+    damageBonus: "Any straight damage bonuses added on a successful hit, after reductions from armor (leg shots)",
+    skill: "Which skill the weapon rolls with",
+    damage: "The dice used for calculating the damage, in 1d6 format",
+    autofiremax: "The autofire multiplier used by the weapon when determining damage",
+    multiplier: "Damage multiplier post reduction from armor (headshots)"
+}
+

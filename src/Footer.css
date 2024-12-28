@@ -1,0 +1,8 @@
+
+.pageFooter{
+    display: flex;
+    flex-direction: row;
+    margin: auto;
+    padding: 20px;
+    justify-content: center;
+} 

@@ -49,23 +49,26 @@ const DamageChart = ({ skills, attacks }) => {
         return attackRoll
     }
 
-    // Function to run a single attack simulation
+    // Function to run a single round simulation
     const runAttack = (weaponAttack, enemy) => {
-        const attackRoll = getAttackRoll(weaponAttack);
+        const attackRolls = Array.from({ length: weaponAttack.rof }, () => getAttackRoll(weaponAttack)); //Rolling an attack roll for each ROF
         const result = {}
         Object.keys(ranges).map(range => {
-            const dv = ranges[range][weaponAttack.rangeType];
-            const damageRoll = diceRoll(weaponAttack.damage + (getAutofireMultiplier(attackRoll.total - dv, weaponAttack) || 0));
-            const damageBeforeReductions = attackRoll.total > dv ? damageRoll.total : 0;
-            let damageAfterReductions = weaponAttack.multiplier ? (damageBeforeReductions - enemy.headSp) * weaponAttack.multiplier : damageBeforeReductions - enemy.bodySp;
-            if (damageRoll.rolls.filter(i => i === 6).length > 2 && !weaponAttack.damageBonus) { // Critical damage, ignoring attacks that guarentee crits
-                damageAfterReductions += 5;
+            const dv = ranges[range][weaponAttack.rangeType]; //Get range DV
+            let totalDamage = 0;
+            for (let index = 0; index < weaponAttack.rof; index++) {
+                const damageRoll = diceRoll(weaponAttack.damage + (getAutofireMultiplier(attackRolls[index].total - dv, weaponAttack) || 0));
+                const damageBeforeReductions = attackRolls[index].total > dv ? damageRoll.total : 0;
+                let damageAfterReductions = weaponAttack.multiplier ? (damageBeforeReductions - enemy.headSp) * weaponAttack.multiplier : damageBeforeReductions - enemy.bodySp;
+                if (damageRoll.rolls.filter(i => i === 6).length > 2 && !weaponAttack.damageBonus) { // Critical damage, ignoring attacks that guarentee crits
+                    damageAfterReductions += 5;
+                }
+                if (damageAfterReductions > 0) { // Guaranteed crits like leg shots
+                    damageAfterReductions += weaponAttack.damageBonus || 0;
+                }
+                totalDamage += damageAfterReductions;
             }
-            if (damageAfterReductions > 0) { // Guarenteed crits like leg shots
-                damageAfterReductions += weaponAttack.damageBonus || 0;
-            }
-
-            return result[range] = damageAfterReductions > 0 ? damageAfterReductions : 0;
+            return result[range] = totalDamage > 0 ? totalDamage : 0;
         })
         return result;
     };
