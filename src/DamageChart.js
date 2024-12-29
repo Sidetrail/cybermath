@@ -206,7 +206,7 @@ const DamageChart = ({ skills, attacks }) => {
                 {generateBestTypeTable(results)}
             </div>
             {attacks.map(attack => (
-                <div className="chart-container">
+                <div className="chart-container" key={attack.id + 'chart'}>
                     {generateHeatMapTable(attack.name, results)}
                 </div>
             ))}
