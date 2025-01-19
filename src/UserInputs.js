@@ -58,7 +58,7 @@ const UserInputs = ({ updateAttacks, updateSkills }) => {
                 </div>
                 <div className="weaponEntryPair">
                     <label data-tooltip={entryExplination.damageBonus}>Bonus Damage</label>
-                    <input type="number" className="singleNumber" defaultValue={attack.damageBonus || 0} onChange={(e) => setUserAttacks([...userAttacks.map(i => i.name !== attack.name ? i : { ...attack, damageBonus: e.target.value })])} />
+                    <input type="number" className="singleNumber" defaultValue={attack.damageBonus || 0} onChange={(e) => setUserAttacks([...userAttacks.map(i => i.name !== attack.name ? i : { ...attack, damageBonus: +e.target.value })])} />
                 </div>
                 <div className="weaponEntryPair">
                     <label data-tooltip={entryExplination.multiplier}>Damage Multiplier</label>
